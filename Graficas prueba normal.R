@@ -3,7 +3,6 @@
 #Funcoina para una y dos poblaciones. Solo distribución normal por ahora
 
 plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma = NULL, sigma2 = NULL, colas = "ambas", main = "", ylab ="", xlab ="", col.NR ="blue", col.R = "red", col.t = "black") {
-  media <- mean(data)
   alfa = 1-gamma
   if(is.null(data2)) {
     est.prueb <- (mean(data)-mu0)/(sigma/sqrt(length(data)))
