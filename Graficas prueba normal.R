@@ -1,6 +1,6 @@
 #Fucnión para generar la gráfica de la prueba de medias con sigma conocida.
 #Genera las zonas de rechazo y no rechazo y posiciona el etadistico de prueba en su valor.
-#Funcoina para una y dos poblaciones. Solo distribución normal por ahora
+#Funciona para una y dos poblaciones. Solo distribución normal por ahora
 
 plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma = NULL, sigma2 = NULL, cola = "ambas", main = "", ylab ="", xlab ="", col.NR ="blue", col.R = "red", col.t = "black") {
   alfa = 1-gamma
@@ -53,7 +53,7 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       xR.Inf <- c(-5,seq(-5,ZR.Inf,length.out = 100),ZR.Inf)
       yR.Inf <- c(0,dnorm(seq(-5,ZR.Inf,length.out = 100)),0)
       xR.Sup <- c(ZR.Sup,seq(ZR.Sup, 5,length.out = 100),5)
-      yR.Sup <- c(0,dnorm(seq(ZR.Sup, 5,length.out = 100)),0)	
+      yR.Sup <- c(0,dnorm(seq(ZR.Sup, 5,length.out = 100)),0)
       plot(x= seq(-5,5,length.out= length(zona.NR)), y = dnorm(seq(-5,5,length.out = length(zona.NR))), type = "l", bty = "l", main = main, ylab = ylab, xlab = xlab)
       polygon(xNR, yNR, col= col.NR)
       polygon(xR.Inf, yR.Inf, col= col.R)
@@ -72,7 +72,7 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
     }
   } else {
     est.prueb <- (mean(data)-mean(data2))/sqrt((sigma/length(data))+(sigma2/length(data2)))
-    if(cola = "izquierda"){
+    if(cola == "izquierda"){
       ZR.Inf <- -5
       ZR.Sup <- qnorm(alfa)
       zona.NR=seq(ZR.Sup,5,length.out = 100)
@@ -119,7 +119,7 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       xR.Inf <- c(-5,seq(-5,ZR.Inf,length.out = 100),ZR.Inf)
       yR.Inf <- c(0,dnorm(seq(-5,ZR.Inf,length.out = 100)),0)
       xR.Sup <- c(ZR.Sup,seq(ZR.Sup, 5,length.out = 100),5)
-      yR.Sup <- c(0,dnorm(seq(ZR.Sup, 5,length.out = 100)),0)	
+      yR.Sup <- c(0,dnorm(seq(ZR.Sup, 5,length.out = 100)),0)
       plot(x= seq(-5,5,length.out= length(zona.NR)), y = dnorm(seq(-5,5,length.out = length(zona.NR))), type = "l", bty = "l", main = main, ylab = ylab, xlab = xlab)
       polygon(xNR, yNR, col= col.NR)
       polygon(xR.Inf, yR.Inf, col= col.R)
@@ -137,4 +137,6 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       }
     }
   }
-} 
+}
+
+plot.norm.test(iris$Sepal.Length, mu0 = 15)
