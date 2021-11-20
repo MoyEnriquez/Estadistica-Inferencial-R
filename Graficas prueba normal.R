@@ -25,7 +25,7 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
       }
-    }else if (colas == "derecha"){
+    }else if (cola == "derecha"){
       ZR.Inf <- qnorm(1-alfa)
       ZR.Sup <- 5
       zona.NR=seq(-5,ZR.Inf,length.out = 100)
@@ -72,7 +72,7 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
     }
   } else {
     est.prueb <- (mean(data)-mean(data2))/sqrt((sigma/length(data))+(sigma2/length(data2)))
-    if(colas = "izquierda"){
+    if(cola = "izquierda"){
       ZR.Inf <- -5
       ZR.Sup <- qnorm(alfa)
       zona.NR=seq(ZR.Sup,5,length.out = 100)
@@ -91,7 +91,7 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
       }
-    }else if (colas == "derecha"){
+    }else if (cola == "derecha"){
       ZR.Inf <- qnorm(1-alfa)
       ZR.Sup <- 5
       zona.NR=seq(-5,ZR.Inf,length.out = 100)
@@ -110,7 +110,7 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
       }
-    }else if (colas == "ambas"){
+    }else if (cola == "ambas"){
       ZR.Inf <- qnorm(alfa/2)
       ZR.Sup <- qnorm(1-alfa/2)
       zona.NR=seq(ZR.Inf,ZR.Sup,length.out = 100)
