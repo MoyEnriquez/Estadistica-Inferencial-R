@@ -1,0 +1,328 @@
+---
+title: "Tarea_12_de_noviembre_2021"
+author: "Moises Alejandro Enriquez Vargas"
+date: "22/11/2021"
+output:
+  html_document:
+    df_print: paged
+---
+*Antes de cargar cualquier cosa voy a correr una función que voy a usar más adelantes. Si no les gusta mucho R pueden ignorar esta parte pero si les gusta R pueden tratar de adivinar como funciona esto, cualquier duda me escriben.*
+```{r}
+plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma = NULL, sigma2 = NULL, cola = "ambas", main = "", ylab ="Z", xlab ="Probabilidad", col.NR ="blue", col.R = "red", col.t = "black") {
+  alfa = 1-gamma
+  if(is.null(data2)) {
+    est.prueb <- (mean(data)-mu0)/(sigma/sqrt(length(data)))
+    if(cola == "izquierda"){
+      ZR.Inf <- -5
+      ZR.Sup <- qnorm(alfa)
+      zona.NR=seq(ZR.Sup,5,length.out = 100)
+      xNR <- c(ZR.Sup,zona.NR,5)
+      yNR <- c(0,dnorm(zona.NR),0)
+      xR <- c(-5,seq(-5,ZR.Sup,length.out = 100),ZR.Sup)
+      yR <- c(0,dnorm(seq(-5,ZR.Sup,length.out = 100)),0)
+      plot(x= seq(-5,5,length.out= length(zona.NR)), y = dnorm(seq(-5,5,length.out = length(zona.NR))), type = "l", bty = "l", main = main, ylab = ylab, xlab = xlab)
+      polygon(xNR, yNR, col= col.NR)
+      polygon(xR, yR, col= col.R)
+      text(x = c(0,-3.5), y = c(0.2,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo"), col = c("white",1))
+      if(est.prueb < -5){
+        text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = -4.5, y = 0.03, labels ="<-", cex = 2, col = "black")
+      }else if (est.prueb > 5){
+        text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = 4.8, y = 0.06, labels ="->", cex = 2, col = "black")
+      }else {
+        text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
+      }
+    }else if (cola == "derecha"){
+      ZR.Inf <- qnorm(1-alfa)
+      ZR.Sup <- 5
+      zona.NR=seq(-5,ZR.Inf,length.out = 100)
+      xNR <- c(-5,zona.NR,ZR.Inf)
+      yNR <- c(0,dnorm(zona.NR),0)
+      xR <- c(ZR.Inf,seq(ZR.Inf, 5,length.out = 100),5)
+      yR <- c(0,dnorm(seq(ZR.Inf, 5,length.out = 100)),0)
+      plot(x= seq(-5,5,length.out= length(zona.NR)), y = dnorm(seq(-5,5,length.out = length(zona.NR))), type = "l", bty = "l", main = main, ylab = ylab, xlab = xlab)
+      polygon(xNR, yNR, col= col.NR)
+      polygon(xR, yR, col= col.R)
+      text(x = c(0,3.5), y = c(0.2,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo"), col = c("white",1))
+      if(est.prueb > 5){
+        text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = 4.5, y = 0.03, labels ="->", cex = 2, col = "black")
+      } else if (est.prueb < -5){
+        text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = -4.8, y = 0.06, labels ="<-", cex = 2, col = "black")
+      } else {
+        text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
+      }
+    }else if (cola == "ambas"){
+      ZR.Inf <- qnorm(alfa/2)
+      ZR.Sup <- qnorm(1-alfa/2)
+      zona.NR=seq(ZR.Inf,ZR.Sup,length.out = 100)
+      xNR <- c(ZR.Inf,zona.NR,ZR.Sup)
+      yNR <- c(0,dnorm(zona.NR),0)
+      xR.Inf <- c(-5,seq(-5,ZR.Inf,length.out = 100),ZR.Inf)
+      yR.Inf <- c(0,dnorm(seq(-5,ZR.Inf,length.out = 100)),0)
+      xR.Sup <- c(ZR.Sup,seq(ZR.Sup, 5,length.out = 100),5)
+      yR.Sup <- c(0,dnorm(seq(ZR.Sup, 5,length.out = 100)),0)
+      plot(x= seq(-5,5,length.out= length(zona.NR)), y = dnorm(seq(-5,5,length.out = length(zona.NR))), type = "l", bty = "l", main = main, ylab = ylab, xlab = xlab)
+      polygon(xNR, yNR, col= col.NR)
+      polygon(xR.Inf, yR.Inf, col= col.R)
+      polygon(xR.Sup, yR.Sup, col= col.R)
+      text(x = c(0,-3.5,3.5), y = c(0.2,0.1,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo","Zona de rechazo"), col = c("white",1,1))
+      if(est.prueb < -5){
+        text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = col.t)
+        text(x = -4.8, y = 0.06, labels ="<-", cex = 2, col = col.t)
+      }else if(est.prueb > 5){
+        text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = col.t)
+        text(x = 4.8, y = 0.03, labels ="->", cex = 2, col = col.t)
+      }else {
+        text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = col.t)
+        text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = col.t, srt = 90)
+      }
+    }
+  } else {
+    est.prueb <- (mean(data)-mean(data2))/sqrt((sigma/length(data))+(sigma2/length(data2)))
+    if(cola == "izquierda"){
+      ZR.Inf <- -5
+      ZR.Sup <- qnorm(alfa)
+      zona.NR=seq(ZR.Sup,5,length.out = 100)
+      xNR <- c(ZR.Sup,zona.NR,5)
+      yNR <- c(0,dnorm(zona.NR),0)
+      xR <- c(-5,seq(-5,ZR.Sup,length.out = 100),ZR.Sup)
+      yR <- c(0,dnorm(seq(-5,ZR.Sup,length.out = 100)),0)
+      plot(x= seq(-5,5,length.out= length(zona.NR)), y = dnorm(seq(-5,5,length.out = length(zona.NR))), type = "l", bty = "l", main = main, ylab = ylab, xlab = xlab)
+      polygon(xNR, yNR, col= col.NR)
+      polygon(xR, yR, col= col.R)
+      text(x = c(0,-3.5), y = c(0.2,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo"), col = c("white",1))
+      if(est.prueb < -5){
+        text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = -4.5, y = 0.03, labels ="<-", cex = 2, col = "black")
+      }else if (est.prueb > 5){
+        text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = 4.8, y = 0.06, labels ="->", cex = 2, col = "black")
+      }else {
+        text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
+      }
+    }else if (cola == "derecha"){
+      ZR.Inf <- qnorm(1-alfa)
+      ZR.Sup <- 5
+      zona.NR=seq(-5,ZR.Inf,length.out = 100)
+      xNR <- c(-5,zona.NR,ZR.Inf)
+      yNR <- c(0,dnorm(zona.NR),0)
+      xR <- c(ZR.Inf,seq(ZR.Inf, 5,length.out = 100),5)
+      yR <- c(0,dnorm(seq(ZR.Inf, 5,length.out = 100)),0)
+      plot(x= seq(-5,5,length.out= length(zona.NR)), y = dnorm(seq(-5,5,length.out = length(zona.NR))), type = "l", bty = "l", main = main, ylab = ylab, xlab = xlab)
+      polygon(xNR, yNR, col= col.NR)
+      polygon(xR, yR, col= col.R)
+      text(x = c(0,3.5), y = c(0.2,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo"), col = c("white",1))
+      if(est.prueb > 5){
+        text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = 4.5, y = 0.03, labels ="->", cex = 2, col = "black")
+      } else if (est.prueb < -5){
+        text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = -4.8, y = 0.06, labels ="<-", cex = 2, col = "black")
+      } else {
+        text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
+      }
+    }else if (cola == "ambas"){
+      ZR.Inf <- qnorm(alfa/2)
+      ZR.Sup <- qnorm(1-alfa/2)
+      zona.NR=seq(ZR.Inf,ZR.Sup,length.out = 100)
+      xNR <- c(ZR.Inf,zona.NR,ZR.Sup)
+      yNR <- c(0,dnorm(zona.NR),0)
+      xR.Inf <- c(-5,seq(-5,ZR.Inf,length.out = 100),ZR.Inf)
+      yR.Inf <- c(0,dnorm(seq(-5,ZR.Inf,length.out = 100)),0)
+      xR.Sup <- c(ZR.Sup,seq(ZR.Sup, 5,length.out = 100),5)
+      yR.Sup <- c(0,dnorm(seq(ZR.Sup, 5,length.out = 100)),0)
+      plot(x= seq(-5,5,length.out= length(zona.NR)), y = dnorm(seq(-5,5,length.out = length(zona.NR))), type = "l", bty = "l", main = main, ylab = ylab, xlab = xlab)
+      polygon(xNR, yNR, col= col.NR)
+      polygon(xR.Inf, yR.Inf, col= col.R)
+      polygon(xR.Sup, yR.Sup, col= col.R)
+      text(x = c(0,-3.5,3.5), y = c(0.2,0.1,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo","Zona de rechazo"), col = c("white",1,1))
+      if(est.prueb < -5){
+        text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = col.t)
+        text(x = -4.8, y = 0.06, labels ="<-", cex = 2, col = col.t)
+      }else if(est.prueb > 5){
+        text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = col.t)
+        text(x = 4.8, y = 0.03, labels ="->", cex = 2, col = col.t)
+      }else {
+        text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = col.t)
+        text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = col.t, srt = 90)
+      }
+    }
+  }
+}
+```
+Ahora sí
+
+### Instrucciones: Utilizando los datos de los alumnos pon a prueba las siguientes hipótesis científicas. En los estudiantes de Bioestadística de la Facultad...
+
+Primero voy a cargar sus datos desde un repositiorio que tengo 
+```{r}
+library(rio)
+alumnos <- import("https://raw.githubusercontent.com/MoyEnriquez/Estadistica-Inferencial-R/master/Alumnos.csv")
+head(alumnos)
+```
+#### 1) Las estudiantes mujeres tienen, en promedio, un promedio en la carrera de 9. Supongan una desviación estándar poblacional de 0.5.
+
+Crearemos los objetos que contienen los datos del problema 1
+```{r}
+gamma <- 0.95
+alfa <- 1-gamma
+sd.1 <- 0.5
+mu0.1 <- 9
+M.prom <- alumnos$prom[alumnos$sexo == "Mujer"]
+```
+a) Hipótesis estadísticas:
+
+  H0: mu1 mujeres == 9 (Igual a 9)
+  
+  H1: mu1 mujeres != 9 (Diferente de 9)
+
+b) Como tengo un contraste de hipótesis con los signos igual y diferente, será una prueba de dos colas.
+
+c) Como conozco la sigma, usaré una prueba de Z para una muestra
+
+d) Calculamos los límites de la zona de no rechazo
+```{r}
+ZR.Inf.1 <- qnorm(alfa/2)
+ZR.Sup.1 <- qnorm(1-alfa/2)
+```
+e) Calculamos el valor de T
+```{r}
+T.obs.1 <- (mean(M.prom)-mu0.1)/(sd.1/sqrt(length(M.prom)))
+print(paste("Mi T observada tiene un valor de ",T.obs.1,"y la zona de no rechazo va de ",ZR.Inf.1,"a",ZR.Sup.1))
+```
+
+Graficamos las zonas de rechazo y vemos donde cae T. (Recuerden que pueden hacer esto a manita para que no sufran haciendolo en R)
+```{r}
+plot.norm.test(M.prom, mu0 = mu0.1, sigma = sd.1)
+```
+
+f) Calculamos el valor de p (Pero como aún no ven es, no lo voy a poner)
+
+g) Decisión estadística: Como mi T observada es menor (muy menor), cae en la zona de rechazo, por lo tanto rechazo la H0
+
+h) Conclusión biológica: El promedio del promedio de la calificación de las estudiantes mujeres es diferente de 9, en este caso es menor a 9.
+
+#### 2) Les estudiantes con pareja (edo.civil) tienen, en promedio, una edad mayor a 21 años. Supongan una desviación estándar poblacional de 1 año.
+
+Crearemos los objetos que contienen los datos del problema 1
+```{r}
+edad.no.soltero <- alumnos$edad[alumnos$edo.civil == "Con"]
+mu0.2 <- 21
+sd.2 <- 1
+```
+a) Hipótesis estadísticas:
+Como la premisa del inciso nos dice que tengan una edad mayor a 21 años, eso nos indica que se trata de la hipótesis alternativa ya que no tiene ningún término de igual (=), por lo tanto las HE quedarían así.
+
+  H0: mu edad con pareja <= 21 (menor que o igual)
+
+  H1: mu edad con pareja > 21 (mayor que)
+  
+b) Como tenemos símbolos de menor y mayor que, la prueba será de una sola cola. Como nos importa (H1) que mu sea mayor a mu0 (21) entonces la cola será la derecha que cae del lado de los valores positivos.
+
+c) Como la sigma es conocida usaré la distribución de Z
+
+d) Calculamos la zona de rechazo. Solo calculamos la parte superior ya que la inferior va a más infinito por ser una prueba de cola derecha
+```{r}
+ZR.Sup.2 <- qnorm(1-alfa)
+```
+e) Calculamos nuestra T
+```{r}
+T.obs.2 <- (mean(edad.no.soltero)-mu0.2)/(sd.2/sqrt(length(edad.no.soltero)))
+print(paste("Mi T observada tiene un valor de ",T.obs.2,"y la zona de rechazo va de ",ZR.Sup.2, "a infinito"))
+```
+Graficamos la zona de rechazo y vemos donde cae T. (Recuerden que pueden hacer esto a manita para que no sufran haciendolo en R)
+```{r}
+plot.norm.test(edad.no.soltero, mu0 = mu0.2, sigma = sd.2, cola = "derecha")
+```
+f) Calculamos el valor de p (auún no lo ven así que no lo voy a aponer)
+
+g) Decisión estadística: Como mi T observada es mayor que el valor más grande de la zona de no rechazo. Decido NO rechazar H0
+
+h) Conclusión biológica: La edad de les alumnes con pareja no es mayor a 21 años. Podría ser menor o igual a 21 años, mas no mayor.
+
+#### 3) Les estudiantes de laboratorio tienen, en promedio, un peso mayor a les estudiantes de campo. Supongan una desviación estándar poblacional para ambos conjuntos de estudiantes de 2 kg.
+
+Guardamos las variables de interés y sus parámetros
+```{r}
+sd.3 <- 2
+peso.lab <- alumnos$peso[alumnos$tipo.biol == "Lab"]
+peso.campo <- alumnos$peso[alumnos$tipo.biol == "Campo"]
+```
+
+a) hipótesis estadísticas: Como estamos comparando dos poblaciones, ahora no va a haber una mu0, solo dos mus poblacionales. Además, como queremos saber si peso.lab > peso.campo, eso nos da la H1.
+
+  H0: mu peso.lab <= mu peso.campo (menor que o igual)
+
+  H1: mu peso.lab > mu peso.campo (mayor que)
+
+b) Como tenemos mayor que y menor que, la prueba va a ser de una sola cola. Y como nos importa (y esto es bien importante, matener siempre el orden de quien es mu1 y mu2) que mu1 (lab) sea mayor que mu2 (campo) entonces será una prueba de cola derecha.
+
+c) Como conozco la sigma de ambos conjuntos, se utilizará una distribución de Z
+
+d) Calculamos la zona de rechazo
+```{r}
+ZR.Sup.3 <- qnorm(1-alfa)
+```
+e) Calculamos T
+```{r}
+T.obs.3 <- (mean(peso.lab)-mean(peso.campo))/sqrt((sd.3/length(peso.lab))+(sd.3/length(peso.campo)))
+print(paste("Mi T observada tiene un valor de ",T.obs.3,"y la zona de rechazo va de ",ZR.Sup.3, "a infinito"))
+```
+Graficamos nuestro valor de T para verlo más fácil
+```{r}
+plot.norm.test(data = peso.lab, data2 = peso.campo, sigma = sd.3, sigma2 = sd.3, cola = "derecha")
+```
+f) Calculamos nuestro valor de p (no lo haré aún)
+
+g) Decisión estadística: Como mi T obs cae en la zona de no rechazo por mucho, casí hasta el otro extremo. Decidimos no rechazar H0
+
+h) Conclusión biológica: El peso promedio de les estudiantes de laboratorio no es mayor que el de les estudiantes de campo. En dado caso, el peso de lab es mayor que el de campo ya que T cayó en valores negativos.
+
+#### 4) Los estudiantes hombres tienen, en promedio, una estatura mayor que las estudiantes mujeres. Supongan una desviación estándar poblacional para hombres de 0.15 m y para mujeres de 0.13 m.
+
+Cargamos los datos de este problema
+```{r}
+est.h <- alumnos$estatura[alumnos$sexo == "Hombre"] 
+est.m <- alumnos$estatura[alumnos$sexo == "Mujer"]
+sd.h.4 <- 0.15
+sd.m.4 <- 0.13
+```
+a) hipótesis estadísticas: Como estamos comparando dos poblaciones, ahora no va a haber una mu0, solo dos mus poblacionales. Además, como queremos saber si est.h > est.m, eso nos da la H1 porque no tiene iguales.
+
+  H0: mu est.h <= mu est.m (menor que o igual)
+
+  H1: mu est.h > mu est.m (mayor que)
+
+b) Como tenemos mayor que y menor que, la prueba va a ser de una sola cola. Y como nos importa (y esto es bien importante, matener siempre el orden de quien es mu1 y mu2) que mu1 (est.h) sea mayor que mu2 (est.m) entonces será una prueba de cola derecha.
+
+c) Como conozco la sigma de ambos conjuntos, se utilizará una distribución de Z
+
+d) Calculamos la zona de rechazo
+```{r}
+ZR.Sup.4 <- qnorm(1-alfa)
+```
+e) Calculamos T
+```{r}
+T.obs.4 <- (mean(est.h)-mean(est.m))/sqrt((sd.h.4/length(est.h))+(sd.m.4/length(est.m)))
+print(paste("Mi T observada tiene un valor de ",T.obs.4,"y la zona de rechazo va de ",ZR.Sup.4, "a infinito"))
+```
+Graficamos nuestro valor de T para verlo más fácil
+```{r}
+plot.norm.test(data = est.h, data2 = est.m, sigma = sd.h.4, sigma2 = sd.m.4, cola ="derecha")
+```
+f) Calculamos nuestro valor de p (no lo haré aún)
+
+g) Decisión estadística: Como mi T obs cae en la zona de rechazo, decidimos rechazar H0. Así esté cerca de la zona de no rechazo, se rechaza H0
+
+h) Conclusión biológica: La estatura de les estudiantes hombres de bioestadística es mayor que la estatura de les estudiantes muejeres.
+
+#### Notas finales:
+
+Para las pruebas de dos mus poblacionales es importante tener muy claro quién es mu1 y mu2 y ponerlas siempre en ese orden en todos los cálculos que hagan ya que no es lo mismo mu1-mu2 que mu2-mu1. Cuidado con eso
