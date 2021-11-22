@@ -1,7 +1,3 @@
-#Fucnión para generar la gráfica de la prueba de medias con sigma conocida.
-#Genera las zonas de rechazo y no rechazo y posiciona el etadistico de prueba en su valor.
-#Funciona para una y dos poblaciones. Solo distribución normal por ahora
-
 plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma = NULL, sigma2 = NULL, cola = "ambas", main = "", ylab ="", xlab ="", col.NR ="blue", col.R = "red", col.t = "black") {
   alfa = 1-gamma
   if(is.null(data2)) {
@@ -20,7 +16,10 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       text(x = c(0,-3.5), y = c(0.2,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo"), col = c("white",1))
       if(est.prueb < -5){
         text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = "black")
-        text(x = -4.5, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
+        text(x = -4.5, y = 0.03, labels ="<-", cex = 2, col = "black")
+      }else if (est.prueb > 5){
+        text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = 4.8, y = 0.06, labels ="->", cex = 2, col = "black")
       }else {
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
@@ -39,7 +38,10 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       text(x = c(0,3.5), y = c(0.2,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo"), col = c("white",1))
       if(est.prueb > 5){
         text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = "black")
-        text(x = 4.5, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
+        text(x = 4.5, y = 0.03, labels ="->", cex = 2, col = "black")
+      } else if (est.prueb < -5){
+        text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = -4.8, y = 0.06, labels ="<-", cex = 2, col = "black")
       } else {
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
@@ -61,10 +63,10 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       text(x = c(0,-3.5,3.5), y = c(0.2,0.1,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo","Zona de rechazo"), col = c("white",1,1))
       if(est.prueb < -5){
         text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = col.t)
-        text(x = -4.5, y = 0.03, labels ="<-", cex = 2, col = col.t, srt = 90)
+        text(x = -4.8, y = 0.06, labels ="<-", cex = 2, col = col.t)
       }else if(est.prueb > 5){
         text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = col.t)
-        text(x = 4.5, y = 0.03, labels ="<-", cex = 2, col = col.t, srt = 90)
+        text(x = 4.8, y = 0.03, labels ="->", cex = 2, col = col.t)
       }else {
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = col.t)
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = col.t, srt = 90)
@@ -86,7 +88,10 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       text(x = c(0,-3.5), y = c(0.2,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo"), col = c("white",1))
       if(est.prueb < -5){
         text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = "black")
-        text(x = -4.5, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
+        text(x = -4.5, y = 0.03, labels ="<-", cex = 2, col = "black")
+      }else if (est.prueb > 5){
+        text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = 4.8, y = 0.06, labels ="->", cex = 2, col = "black")
       }else {
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
@@ -105,7 +110,10 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       text(x = c(0,3.5), y = c(0.2,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo"), col = c("white",1))
       if(est.prueb > 5){
         text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = "black")
-        text(x = 4.5, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
+        text(x = 4.5, y = 0.03, labels ="->", cex = 2, col = "black")
+      } else if (est.prueb < -5){
+        text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = "black")
+        text(x = -4.8, y = 0.06, labels ="<-", cex = 2, col = "black")
       } else {
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = "black")
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = "black", srt = 90)
@@ -127,10 +135,10 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
       text(x = c(0,-3.5,3.5), y = c(0.2,0.1,0.1), labels = c("Zona de \n no rechazo", "Zona de rechazo","Zona de rechazo"), col = c("white",1,1))
       if(est.prueb < -5){
         text(x = -4.5, y = 0.06, labels ="t", cex = 2, col = col.t)
-        text(x = -4.5, y = 0.03, labels ="<-", cex = 2, col = col.t, srt = 90)
+        text(x = -4.8, y = 0.06, labels ="<-", cex = 2, col = col.t)
       }else if(est.prueb > 5){
         text(x = 4.5, y = 0.06, labels ="t", cex = 2, col = col.t)
-        text(x = 4.5, y = 0.03, labels ="<-", cex = 2, col = col.t, srt = 90)
+        text(x = 4.8, y = 0.03, labels ="->", cex = 2, col = col.t)
       }else {
         text(x = est.prueb, y = 0.06, labels ="t", cex = 2, col = col.t)
         text(x = est.prueb, y = 0.03, labels ="<-", cex = 2, col = col.t, srt = 90)
@@ -138,5 +146,3 @@ plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma 
     }
   }
 }
-
-plot.norm.test(iris$Sepal.Length, mu0 = 15)
