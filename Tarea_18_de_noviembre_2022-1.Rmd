@@ -1,0 +1,124 @@
+---
+title: "Tarea 18 de Noviembre"
+author: "Moises Alejandro Enriquez Vargas"
+date: "22/11/2021"
+output: html_document
+---
+Primero voy a cargar sus datos desde un repositiorio que tengo 
+```{r}
+library(rio)
+alumnos <- import("https://raw.githubusercontent.com/MoyEnriquez/Estadistica-Inferencial-R/master/Alumnos.csv")
+head(alumnos)
+```
+#### 1) Las estudiantes mujeres tienen, en promedio, un promedio en la carrera de 9. Supongan una desviación estándar poblacional de 0.5.
+
+Crearemos los objetos que contienen los datos del problema 1
+```{r}
+gamma <- 0.95
+alfa <- 1-gamma
+sd.1 <- 0.5
+mu0.1 <- 9
+M.prom <- alumnos$prom[alumnos$sexo == "Mujer"]
+```
+a) Hipótesis estadísticas:
+
+  H0: mu1 mujeres == 9 (Igual a 9)
+  
+  H1: mu1 mujeres != 9 (Diferente de 9)
+
+d) Calculamos los límites de la zona de no rechazo
+```{r}
+ZR.Inf.1 <- qnorm(alfa/2)
+ZR.Sup.1 <- qnorm(1-alfa/2)
+```
+e) Calculamos el valor de T
+```{r}
+T.obs.1 <- (mean(M.prom)-mu0.1)/(sd.1/sqrt(length(M.prom)))
+print(paste("Mi T observada tiene un valor de ",T.obs.1,"y la zona de no rechazo va de ",ZR.Inf.1,"a",ZR.Sup.1))
+```
+f) Ahora sí voy a calcular p
+
+```{r}
+```
+
+g) Decisión estadística: Como mi T observada es menor (muy menor), cae en la zona de rechazo, por lo tanto rechazo la H0
+
+h) Conclusión biológica: El promedio del promedio de la calificación de las estudiantes mujeres es diferente de 9, en este caso es menor a 9.
+
+#### 2) Les estudiantes con pareja (edo.civil) tienen, en promedio, una edad mayor a 21 años. Supongan una desviación estándar poblacional de 1 año.
+
+Crearemos los objetos que contienen los datos del problema 1
+```{r}
+edad.no.soltero <- alumnos$edad[alumnos$edo.civil == "Con"]
+mu0.2 <- 21
+sd.2 <- 1
+```
+a) Hipótesis estadísticas:
+Como la premisa del inciso nos dice que tengan una edad mayor a 21 años, eso nos indica que se trata de la hipótesis alternativa ya que no tiene ningún término de igual (=), por lo tanto las HE quedarían así.
+
+  H0: mu edad con pareja <= 21 (menor que o igual)
+
+  H1: mu edad con pareja > 21 (mayor que)
+  
+e) Calculamos nuestra T
+```{r}
+T.obs.2 <- (mean(edad.no.soltero)-mu0.2)/(sd.2/sqrt(length(edad.no.soltero)))
+print(paste("Mi T observada tiene un valor de ",T.obs.2,"y la zona de rechazo va de ",ZR.Sup.2, "a infinito"))
+```
+f) Calculamos el valor de p ahora sí
+
+g) Decisión estadística: Como mi T observada es mayor que el valor más grande de la zona de no rechazo. Decido NO rechazar H0
+
+h) Conclusión biológica: La edad de les alumnes con pareja no es mayor a 21 años. Podría ser menor o igual a 21 años, mas no mayor.
+
+#### 3) Les estudiantes de laboratorio tienen, en promedio, un peso mayor a les estudiantes de campo. Supongan una desviación estándar poblacional para ambos conjuntos de estudiantes de 2 kg.
+
+Guardamos las variables de interés y sus parámetros
+```{r}
+sd.3 <- 2
+peso.lab <- alumnos$peso[alumnos$tipo.biol == "Lab"]
+peso.campo <- alumnos$peso[alumnos$tipo.biol == "Campo"]
+```
+
+a) hipótesis estadísticas: Como estamos comparando dos poblaciones, ahora no va a haber una mu0, solo dos mus poblacionales. Además, como queremos saber si peso.lab > peso.campo, eso nos da la H1.
+
+  H0: mu peso.lab <= mu peso.campo (menor que o igual)
+
+  H1: mu peso.lab > mu peso.campo (mayor que)
+
+e) Calculamos T
+```{r}
+T.obs.3 <- (mean(peso.lab)-mean(peso.campo))/sqrt((sd.3/length(peso.lab))+(sd.3/length(peso.campo)))
+print(paste("Mi T observada tiene un valor de ",T.obs.3,"y la zona de rechazo va de ",ZR.Sup.3, "a infinito"))
+```
+f) Calculamos nuestro valor de p ahora sí
+
+g) Decisión estadística: Como mi T obs cae en la zona de no rechazo por mucho, casí hasta el otro extremo. Decidimos no rechazar H0
+
+h) Conclusión biológica: El peso promedio de les estudiantes de laboratorio no es mayor que el de les estudiantes de campo. En dado caso, el peso de lab es mayor que el de campo ya que T cayó en valores negativos.
+
+#### 4) Los estudiantes hombres tienen, en promedio, una estatura mayor que las estudiantes mujeres. Supongan una desviación estándar poblacional para hombres de 0.15 m y para mujeres de 0.13 m.
+
+Cargamos los datos de este problema
+```{r}
+est.h <- alumnos$estatura[alumnos$sexo == "Hombre"] 
+est.m <- alumnos$estatura[alumnos$sexo == "Mujer"]
+sd.h.4 <- 0.15
+sd.m.4 <- 0.13
+```
+a) hipótesis estadísticas: Como estamos comparando dos poblaciones, ahora no va a haber una mu0, solo dos mus poblacionales. Además, como queremos saber si est.h > est.m, eso nos da la H1 porque no tiene iguales.
+
+  H0: mu est.h <= mu est.m (menor que o igual)
+
+  H1: mu est.h > mu est.m (mayor que)
+
+e) Calculamos T
+```{r}
+T.obs.4 <- (mean(est.h)-mean(est.m))/sqrt((sd.h.4/length(est.h))+(sd.m.4/length(est.m)))
+print(paste("Mi T observada tiene un valor de ",T.obs.4,"y la zona de rechazo va de ",ZR.Sup.4, "a infinito"))
+```
+f) Calculamos nuestro valor de p ahora sí
+
+g) Decisión estadística: Como mi T obs cae en la zona de rechazo, decidimos rechazar H0. Así esté cerca de la zona de no rechazo, se rechaza H0
+
+h) Conclusión biológica: La estatura de les estudiantes hombres de bioestadística es mayor que la estatura de les estudiantes muejeres.
