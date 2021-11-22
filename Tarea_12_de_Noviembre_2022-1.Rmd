@@ -8,7 +8,7 @@ output:
 ---
 *Antes de cargar cualquier cosa voy a correr una función que voy a usar más adelantes. Si no les gusta mucho R pueden ignorar esta parte pero si les gusta R pueden tratar de adivinar como funciona esto, cualquier duda me escriben.*
 ```{r}
-plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma = NULL, sigma2 = NULL, cola = "ambas", main = "", ylab ="Z", xlab ="Probabilidad", col.NR ="blue", col.R = "red", col.t = "black") {
+plot.norm.test <- function (data, data2 = NULL, mu0 = NULL, gamma = 0.95, sigma = NULL, sigma2 = NULL, cola = "ambas", main = "", ylab ="Probabilidad", xlab ="Z", col.NR ="blue", col.R = "red", col.t = "black") {
   alfa = 1-gamma
   if(is.null(data2)) {
     est.prueb <- (mean(data)-mu0)/(sigma/sqrt(length(data)))
